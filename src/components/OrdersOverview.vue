@@ -1,7 +1,7 @@
 <template>
   <div class="orders_container">
   <div class="orders_sub_container">
-    <h1>Orders Overview</h1>
+    <h1>Orders </h1>
     <table>
       <thead>
         <tr>
@@ -20,8 +20,17 @@
           <td>{{ order.customer?.fullName || "N/A" }}</td>
           <td>{{ order.totalPrice || "N/A" }}</td>
           <td>
-              <span :class="getStatusClass(order.status)">{{ order.status || "N/A" }}</span>
-            </td>
+              <!-- Dropdown for status -->
+              <select
+                :class="getStatusClass(order.status)"
+                v-model="order.status"
+                @change="confirmStatusChange(order)"
+              >
+                <option value="Pending">Pending</option>
+                <option value="Delivered">Delivered</option>
+                <option value="Cancelled">Cancelled</option>
+              </select>
+          </td>
           <td>
             <button @click="viewOrder(order._id)">View</button>
           </td>
@@ -30,6 +39,16 @@
     </table>
     <p v-if="error" style="color: red;">{{ error }}</p>
   </div>
+  <!-- Confirmation Div -->
+  <div v-if="confirmationVisible" class="confirmation-modal">
+      <p>
+        Are you sure you want to change the status to
+        <strong>{{ selectedStatus }}</strong>?
+      </p>
+      <button @click="applyStatusChange">Yes</button>
+      <button @click="cancelStatusChange">No</button>
+  </div>
+  
   <div class="orders_account">
     <div>
       <h2>Account</h2>
@@ -43,13 +62,15 @@
 </div>
 
 </template>
-
 <script>
 export default {
   data() {
     return {
       orders: [],
       error: null,
+      confirmationVisible: false,
+      selectedOrderId: null,
+      selectedStatus: null,
     };
   },
   async created() {
@@ -73,14 +94,50 @@ export default {
     },
     getStatusClass(status) {
       switch (status) {
-        case 'Pending':
-          return 'status-pending';
-        case 'Delivered':
-          return 'status-delivered';
-        case 'Cancelled':
-          return 'status-cancelled';
+        case "Pending":
+          return "status-pending";
+        case "Delivered":
+          return "status-delivered";
+        case "Cancelled":
+          return "status-cancelled";
         default:
-          return '';
+          return "";
+      }
+    },
+    confirmStatusChange(order) {
+      this.confirmationVisible = true;
+      this.selectedOrderId = order._id;
+      this.selectedStatus = order.status; // Fix: Track the correct status
+    },
+    async applyStatusChange() {
+      try {
+        const response = await fetch(
+          `https://sneaker-config.onrender.com/api/v1/orders/${this.selectedOrderId}`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+            body: JSON.stringify({ status: this.selectedStatus }),
+          }
+        );
+
+        if (!response.ok) throw new Error("Failed to update status");
+
+        alert("Status updated successfully!");
+        this.confirmationVisible = false; // Hide the confirmation modal
+      } catch (err) {
+        this.error = err.message;
+      }
+    },
+    cancelStatusChange() {
+      this.confirmationVisible = false;
+
+      // Revert dropdown to the original value
+      const order = this.orders.find((o) => o._id === this.selectedOrderId);
+      if (order) {
+        order.status = this.selectedStatus; // Restore the original status
       }
     },
   },
@@ -111,7 +168,9 @@ th, td {
 }
 
 th {
-  background-color: #f4f4f4;
+  background-color: #000;
+  color: rgb(105, 255, 71);
+  height: 50px;
 }
 .orders_container{
   display: flex;
@@ -126,22 +185,67 @@ th {
   background-color: #FDF7FF;
 }
 
-.status-pending {
-  background-color: #DED2FF;
-  padding: 10px 20px;
+select {
+  padding: 10px 5px;
+  border: none;
   border-radius: 4px;
+  font-size: 14px;
+  background-color: transparent;
+  -webkit-appearance: menulist; /* Keeps the native dropdown arrow in Safari */
+  -moz-appearance: menulist;
+  outline: none;  
+  appearance: menulist;
+  border-right: 10px solid transparent
+
+}
+
+select:hover {
+  cursor: pointer;
+}
+.status-pending {
+  background-color: #ded2ff;
 }
 
 .status-delivered {
-  background-color: #9CFFA9;
-  padding: 10px 20px;
-  border-radius: 4px;
+  background-color: #9cff9a;
 }
 
 .status-cancelled {
-  background-color: #FF9A9C;
-  padding: 10px 20px;
+  background-color: #ff9a9c;
+}
+
+.confirmation-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 20px;
+  border: 1px solid #ccc;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+.confirmation-modal p {
+  margin-bottom: 20px;
+}
+
+.confirmation-modal button {
+  margin-right: 10px;
+  padding: 8px 12px;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
   border-radius: 4px;
+}
+
+.confirmation-modal button:last-child {
+  background-color: #dc3545;
+}
+
+.confirmation-modal button:hover {
+  opacity: 0.9;
 }
 
 </style>
