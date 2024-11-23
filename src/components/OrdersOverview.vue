@@ -32,7 +32,7 @@
               </select>
           </td>
           <td>
-            <button @click="viewOrder(order._id)">View</button>
+            <button class="view" @click="viewOrder(order._id)">view</button>
           </td>
         </tr>
       </tbody>
@@ -56,6 +56,7 @@
     </div>
   
   <div class="orders_account">
+    <div>
       <div class="account_header">
         <img :src="profilePicture" alt="Profile Picture" class="profile_picture" />
         <h2>{{ accountName }}</h2>
@@ -71,6 +72,7 @@
         <p>Cancelled orders </p>
         <span class="number">{{ cancelledOrders }}</span>
       </div>
+    </div>
   <button @click="logout" class="logout_button">Log Out</button>
   </div>
 </div>
@@ -199,6 +201,7 @@ body {
   font-family: 'Inter', sans-serif;
   margin: 0;
   padding: 0;
+  height: 100vh;
 }
 
 table {
@@ -222,16 +225,21 @@ th {
 }
 .orders_container{
   display: flex;
+  height: 100vh; 
+  position: relative;
 }
 .orders_sub_container{
   flex: 5;
   padding: 20px;
 }
-.orders_account{
+.orders_account {
   flex: 1;
   padding: 20px;
-  background-color: #FDF7FF;
-  height: 100vh;
+  background-color: #fdf7ff;
+  display: flex;
+  flex-direction: column; /* Arrange items vertically */
+  justify-content: space-between; /* Space between content and logout button */
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1); /* Optional shadow for separation */
 }
 
 select {
@@ -262,38 +270,47 @@ select:hover {
 .status-cancelled {
   background-color: #ff9a9c;
 }
-
 .confirmation-modal {
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: white;
-  padding: 20px;
+  background: #ffffff; /* Pure white background */
+  padding: 30px;
   border: 1px solid #ccc;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   z-index: 1000;
+  width: 400px;
+  text-align: center;
 }
 
 .confirmation-modal p {
+  font-size: 16px;
+  color: #333;
   margin-bottom: 20px;
 }
 
 .confirmation-modal button {
-  margin-right: 10px;
-  padding: 8px 12px;
+  margin: 10px 5px;
+  padding: 10px 20px;
   border: none;
-  background-color: #007bff;
-  color: white;
-  cursor: pointer;
   border-radius: 4px;
-}
-
-.confirmation-modal button:last-child {
-  background-color: #dc3545;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  background-color: #28a745;
+  color: white;
 }
 
 .confirmation-modal button:hover {
+  opacity: 0.9;
+}
+.confirmation-modal button:last-child {
+  background-color: #dc3545; 
+}
+
+.confirmation-modal button:last-child:hover {
   opacity: 0.9;
 }
 
@@ -302,31 +319,38 @@ select:hover {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: #d4edda;
-  padding: 20px;
+  background: #f0fff4; /* Light green background for success */
+  padding: 30px;
   border: 1px solid #c3e6cb;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   z-index: 1000;
+  width: 400px;
+  text-align: center;
 }
 
 .success-modal p {
-  color: #155724;
+  font-size: 16px;
+  color: #155724; /* Dark green for text */
   margin-bottom: 20px;
   font-weight: bold;
 }
 
 .success-modal button {
-  padding: 8px 12px;
+  padding: 10px 20px;
   border: none;
-  background-color: #28a745;
-  color: white;
-  cursor: pointer;
   border-radius: 4px;
+  background-color: #28a745; /* Green button */
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
 }
 
 .success-modal button:hover {
-  opacity: 0.9;
+  background-color: #218838; /* Darker green on hover */
 }
+
 .profile_picture {
   width: 40px;
   height: 40px;
@@ -335,21 +359,21 @@ select:hover {
 }
 .account_header {
   display: flex;
-  flex-direction: row;
-  align-items: center;  
+  align-items: center;
   gap: 10px;
-} 
+}
 
 .logout_button {
-  margin-top: 20px;
   padding: 10px 20px;
-  background-color: #dc3545;
+  background-color: #fc5f61;
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   font-size: 16px;
+  align-self: center; /* Center button horizontally */
 }
+
 
 .logout_button:hover {
   opacity: 0.9;
@@ -358,6 +382,20 @@ select:hover {
 .number{
   font-size: 24px;
   font-weight: bold;
+}
+
+.view {
+  background-color: white;
+  color: #676767;
+  border: 1px solid #676767;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.view:hover {
+  background-color: #676767;
+  color: white;
 }
 
 </style>
