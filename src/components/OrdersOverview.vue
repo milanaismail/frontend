@@ -23,8 +23,8 @@
               <!-- Dropdown for status -->
               <select
                 :class="getStatusClass(order.status)"
-                v-model="order.status"
-                @change="confirmStatusChange(order)"
+                :value="order.status"
+                @change="handleStatusChange(order, $event)"
               >
                 <option value="Pending">Pending</option>
                 <option value="Delivered">Delivered</option>
@@ -48,16 +48,30 @@
       <button @click="applyStatusChange">Yes</button>
       <button @click="cancelStatusChange">No</button>
   </div>
+
+    <!-- Success Modal -->
+    <div v-if="successModalVisible" class="success-modal">
+      <p>Status updated successfully!</p>
+      <button @click="closeSuccessModal">OK</button>
+    </div>
   
   <div class="orders_account">
-    <div>
-      <h2>Account</h2>
-      <h3>Overview</h3>
-      <p>Total orders</p>
-      <p>Pending orders</p>
-      <p>Delivered orders</p>
-      <p>Cancelled orders</p>
-    </div>
+      <div class="account_header">
+        <img :src="profilePicture" alt="Profile Picture" class="profile_picture" />
+        <h2>{{ accountName }}</h2>
+      </div>
+      <div class="account_overview">
+        <h3>Overview</h3>
+        <p>Total orders </p>
+        <span class="number">{{ totalOrders }}</span>
+        <p>Pending orders </p>
+        <span class="number">{{ pendingOrders }}</span>
+        <p>Delivered orders </p>
+        <span class="number">{{ deliveredOrders }}</span>
+        <p>Cancelled orders </p>
+        <span class="number">{{ cancelledOrders }}</span>
+      </div>
+  <button @click="logout" class="logout_button">Log Out</button>
   </div>
 </div>
 
@@ -69,9 +83,27 @@ export default {
       orders: [],
       error: null,
       confirmationVisible: false,
+      successModalVisible: false,
       selectedOrderId: null,
       selectedStatus: null,
+      previousStatus: null,
+      profilePicture: "https://dummyimage.com/100x100/cccccc/000000.png&text=Profile",
+      accountName: "John Doe", 
     };
+  },
+  computed: {
+    totalOrders() {
+      return this.orders.length;
+    },
+    pendingOrders() {
+      return this.orders.filter((order) => order.status === "Pending").length;
+    },
+    deliveredOrders() {
+      return this.orders.filter((order) => order.status === "Delivered").length;
+    },
+    cancelledOrders() {
+      return this.orders.filter((order) => order.status === "Cancelled").length;
+    },
   },
   async created() {
     try {
@@ -86,7 +118,7 @@ export default {
   },
   methods: {
     formatDate(dateString) {
-      const options = { year: "numeric", month: "long", day: "numeric" };
+      const options = { year: "numeric", month: "short", day: "numeric" };
       return new Date(dateString).toLocaleDateString(undefined, options);
     },
     viewOrder(orderId) {
@@ -104,45 +136,61 @@ export default {
           return "";
       }
     },
-    confirmStatusChange(order) {
-      this.confirmationVisible = true;
+    handleStatusChange(order, event) {
+      this.previousStatus = order.status; // Store the current status
       this.selectedOrderId = order._id;
-      this.selectedStatus = order.status; // Fix: Track the correct status
+      this.selectedStatus = event.target.value; // Get the new status
+      this.confirmationVisible = true; // Show the confirmation modal
     },
     async applyStatusChange() {
-      try {
-        const response = await fetch(
-          `https://sneaker-config.onrender.com/api/v1/orders/${this.selectedOrderId}`,
-          {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-            body: JSON.stringify({ status: this.selectedStatus }),
-          }
-        );
-
-        if (!response.ok) throw new Error("Failed to update status");
-
-        alert("Status updated successfully!");
-        this.confirmationVisible = false; // Hide the confirmation modal
-      } catch (err) {
-        this.error = err.message;
+  try {
+    const response = await fetch(
+      `https://sneaker-config.onrender.com/api/v1/orders/${this.selectedOrderId}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify({ status: this.selectedStatus }),
       }
-    },
+    );
+
+    if (!response.ok) throw new Error("Failed to update status");
+
+    // Update the order's status in the frontend
+    const order = this.orders.find((o) => o._id === this.selectedOrderId);
+    if (order) {
+      order.status = this.selectedStatus; // Update the status in the orders array
+    }
+
+    this.confirmationVisible = false;
+    this.successModalVisible = true; // Show the success modal
+  } catch (err) {
+    this.error = err.message;
+  }
+},
     cancelStatusChange() {
       this.confirmationVisible = false;
 
-      // Revert dropdown to the original value
+      // Revert the dropdown to the previous status
       const order = this.orders.find((o) => o._id === this.selectedOrderId);
       if (order) {
-        order.status = this.selectedStatus; // Restore the original status
+        order.status = this.previousStatus; // Restore the previous status
       }
+    },
+    closeSuccessModal() {
+      this.successModalVisible = false; // Close the success modal
+    },
+    logout() {
+      localStorage.removeItem("token"); // Remove token from local storage
+      this.$router.push("/login"); // Redirect to login page
     },
   },
 };
 </script>
+
+
 
 <style>
 @import url('"https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet"');
@@ -183,6 +231,7 @@ th {
   flex: 1;
   padding: 20px;
   background-color: #FDF7FF;
+  height: 100vh;
 }
 
 select {
@@ -246,6 +295,69 @@ select:hover {
 
 .confirmation-modal button:hover {
   opacity: 0.9;
+}
+
+.success-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #d4edda;
+  padding: 20px;
+  border: 1px solid #c3e6cb;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+.success-modal p {
+  color: #155724;
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+
+.success-modal button {
+  padding: 8px 12px;
+  border: none;
+  background-color: #28a745;
+  color: white;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.success-modal button:hover {
+  opacity: 0.9;
+}
+.profile_picture {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.account_header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;  
+  gap: 10px;
+} 
+
+.logout_button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.logout_button:hover {
+  opacity: 0.9;
+}
+
+.number{
+  font-size: 24px;
+  font-weight: bold;
 }
 
 </style>
