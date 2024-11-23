@@ -6,65 +6,10 @@
         <p> {{ order.status }}</p>
       </div>
   <div class="order_details_container" v-if="order">
-    <div class="order_info">
-      <div class="order_info_contact">
-        <h2>Customer </h2> 
-        <p>Contact info</p>
-        <p>{{ order.customer?.fullName || "N/A" }}</p>
-        <p>{{ order.customer?.email || "N/A" }}</p>
-        <p>{{ order.customer?.phone || "N/A" }}</p>
-      </div>
-      <div class="order_info_billing">
-        <p>bill to</p>
-        <p> {{ order.customer?.fullName || "N/A" }}</p>
-        <p>{{ order.customer?.billingAddress || "N/A" }}</p>
-      </div>
-      <div class="order_info_shipping">
-        <p>ship to</p>
-        <p> {{ order.customer?.fullName || "N/A" }}</p>
-        <p>{{ order.customer?.shippingAddress || "N/A" }}</p>
-      <p><strong>Created:</strong> {{ formatDate(order.createdAt) }}</p>
-      </div>
-      <div class="order_info_date">
-        <p>order date</p>
-      <p>{{ formatDate(order.createdAt) }}</p>
-      </div>
-      <div class="order_info_total">
-        <p>total price</p>
-        <p>{{ formatPrice(calculateTotalPrice()) }}</p>
-      </div>
-    </div>
-    <!-- Product Details -->
-    <div class="product_details"  v-for="(product, index) in order.products" :key="product.productId">
+    <div class="order_details_subcontainer">
+      <!-- Product Details -->
+      <div class="product_details"  v-for="(product, index) in order.products" :key="product.productId">
       <h2>Products</h2>
-      <div class="product_details_image">
-        <img src="https://via.placeholder.com/150" alt="Placeholder Image">     
-      </div>
-      <div class="product_details_config" >
-        <span class="sub-title"><p>product id</p></span>
-        <p>{{ product.productId }}</p>
-        <span class="sub-title"><p>size</p></span>
-        <p>{{ product.size }}</p>
-        
-        <span class="sub-title"><p>laces</p></span>
-        <p> {{ product.colors.laces || "N/A" }}</p>
-        <span class="sub-title"><p>sole top</p></span>
-        <p> {{ product.colors.soletop || "N/A" }}</p>
-        <span class="sub-title"><p>sole bottom</p></span>
-        <p> {{ product.colors.soletop || "N/A" }}</p>
-        <span class="sub-title"><p>front part</p></span>
-        <p> {{ product.colors.frontpart || "N/A" }}</p>
-        <span class="sub-title"><p>upper part</p></span>
-        <p> {{ product.colors.upperpart || "N/A" }}</p>
-        <span class="sub-title"><p>body</p></span>
-        <p> {{ product.colors.bodypart || "N/A" }}</p>
-        <span class="sub-title"><p>lining</p></span>
-        <p> {{ product.colors.lining || "N/A" }}</p>
-      </div>
-      <div class="product_details_size" >
-        <span class="sub-title"><p>size</p></span>
-        <p> {{ product.size || "N/A" }}</p>
-      </div>
        <table>
         <thead>
           <tr>
@@ -82,35 +27,81 @@
           <tr v-for="product in order.products" :key="product.productId">
             <td>        <img src="https://via.placeholder.com/150" alt="Placeholder Image">     
             </td>
-  <td>{{ product.productId }}</td>
-  <td>
-    <strong>Laces:</strong> {{ product.colors.laces || "N/A" }}<br />
-    <strong>Sole Top:</strong> {{ product.colors.soleTop || "N/A" }}<br />
-    <strong>Sole Bottom:</strong> {{ product.colors.soleBottom || "N/A" }}<br />
-    <strong>Front Part:</strong> {{ product.colors.frontPart || "N/A" }}<br />
-    <strong>Upper Part:</strong> {{ product.colors.upperPart || "N/A" }}<br />
-    <strong>Body:</strong> {{ product.colors.body || "N/A" }}<br />
-    <strong>Lining:</strong> {{ product.colors.lining || "N/A" }}
-  </td>
-  <td>
-    <strong>Laces:</strong> {{ product.fabrics.laces || "N/A" }}<br />
-    <strong>Sole Top:</strong> {{ product.fabrics.soleTop || "N/A" }}<br />
-    <strong>Sole Bottom:</strong> {{ product.fabrics.soleBottom || "N/A" }}<br />
-    <strong>Front Part:</strong> {{ product.fabrics.frontPart || "N/A" }}<br />
-    <strong>Upper Part:</strong> {{ product.fabrics.upperPart || "N/A" }}<br />
-    <strong>Body:</strong> {{ product.fabrics.body || "N/A" }}<br />
-    <strong>Lining:</strong> {{ product.fabrics.lining || "N/A" }}
-  </td>
-  <td>{{ product.size }}</td>
-  <td>{{ formatPrice(product.price) }}</td>
-  <td>{{ product.quantity }}</td>
-  <td>{{ formatPrice(product.price * product.quantity) }}</td>
-</tr>
+            <td>{{ product.productId }}</td>
+            <td>
+              <strong>Laces:</strong> {{ product.colors.laces || "N/A" }}<br />
+              <strong>Sole Top:</strong> {{ product.colors.soleTop || "N/A" }}<br />
+              <strong>Sole Bottom:</strong> {{ product.colors.soleBottom || "N/A" }}<br />
+              <strong>Front Part:</strong> {{ product.colors.frontPart || "N/A" }}<br />
+              <strong>Upper Part:</strong> {{ product.colors.upperPart || "N/A" }}<br />
+              <strong>Body:</strong> {{ product.colors.body || "N/A" }}<br />
+              <strong>Lining:</strong> {{ product.colors.lining || "N/A" }}
+            </td>
+            <td>
+              <strong>Laces:</strong> {{ product.fabrics.laces || "N/A" }}<br />
+              <strong>Sole Top:</strong> {{ product.fabrics.soleTop || "N/A" }}<br />
+              <strong>Sole Bottom:</strong> {{ product.fabrics.soleBottom || "N/A" }}<br />
+              <strong>Front Part:</strong> {{ product.fabrics.frontPart || "N/A" }}<br />
+              <strong>Upper Part:</strong> {{ product.fabrics.upperPart || "N/A" }}<br />
+              <strong>Body:</strong> {{ product.fabrics.body || "N/A" }}<br />
+              <strong>Lining:</strong> {{ product.fabrics.lining || "N/A" }}
+            </td>
+            <td>{{ product.size }}</td>
+            <td>{{ formatPrice(product.price) }}</td>
+            <td>{{ product.quantity }}</td>
+            <td>{{ formatPrice(product.price * product.quantity) }}</td>
+          </tr>
         </tbody>
       </table>
     </div>
 
-    <!-- Back Button -->
+    <!-- shipping details-->
+    <div class="order_info_shipping">
+      <h2>Shipping Details</h2>
+      <p><strong>Shipping Method:</strong> {{ order.shippingMethod || "N/A" }}</p>
+      <p><strong>Shipping Price:</strong> {{ order.shippingPrice  || "N/A"  }}</p>
+    </div>
+
+    <!-- payment details-->
+    <div class="order_info_payment">
+      <h2>Payment Details</h2>
+      <!--subtotal-->
+      <p><strong>Subtotal:</strong> {{ formatPrice(calculateTotalPrice()) }}</p>
+      <!--shipping cost-->
+      <p><strong>Shipping:</strong> {{ order.shippingPrice || "N/A" }}</p>
+      <!--total price-->
+      <p><strong>Total:</strong> {{ formatPrice(calculateTotalPrice() + order.shippingPrice) }}</p>
+    </div>
+  </div>
+    <!-- Customer Details -->
+    <div class="order_info">
+      <div class="order_info_contact">
+        <h2>Customer </h2> 
+        <p>Contact info</p>
+        <p>{{ order.customer?.fullName || "N/A" }}</p>
+        <p>{{ order.customer?.email || "N/A" }}</p>
+        <p>{{ order.customer?.phone || "N/A" }}</p>
+      </div>
+      <div class="order_info_billing_adress">
+        <p>bill to</p>
+        <p> {{ order.customer?.fullName || "N/A" }}</p>
+        <p>{{ order.customer?.billingAddress || "N/A" }}</p>
+      </div>
+      <div class="order_info_shipping_adress">
+        <p>ship to</p>
+        <p> {{ order.customer?.fullName || "N/A" }}</p>
+        <p>{{ order.customer?.shippingAddress || "N/A" }}</p>
+      <p><strong>Created:</strong> {{ formatDate(order.createdAt) }}</p>
+      </div>
+      <div class="order_info_date">
+        <p>order date</p>
+      <p>{{ formatDate(order.createdAt) }}</p>
+      </div>
+      <div class="order_info_total">
+        <p>total price</p>
+        <p>{{ formatPrice(calculateTotalPrice()) }}</p>
+      </div>
+    </div>
   </div>
 </div>
 </template>
@@ -161,23 +152,35 @@ export default {
 <style scoped>
 .body_template {
   background-color: #f9f9f9;
-  min-height: 100vh;
+  height: 100vh;
 }
 .order_details_container {
   margin: 50px 50px;
   display: flex;
-  flex-direction: column; /* Stack items vertically */
+  flex-direction: row; /* Stack items vertically */
   gap: 20px; /* Space between blocks */
   border-radius: 8px;
 }
 
+.order_details_subcontainer {
+  display: flex;
+  flex-direction: column; /* Arrange items horizontally */
+  gap: 20px; /* Space between columns */
+  flex: 3;
+}
+
 .order_info, 
-.customer_info, 
-.product_details {
+.product_details,
+.order_info_shipping,
+.order_info_payment {
   background-color: white; /* Light background for blocks */
   border-radius: 10px; /* Rounded corners for each block */
   padding: 20px; /* Internal padding */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for each block */
+}
+
+.order_info{
+  flex: 1;
 }
 
 h1, h2 {
