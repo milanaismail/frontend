@@ -72,7 +72,7 @@
         <p>Cancelled orders </p>
         <span class="number">{{ cancelledOrders }}</span>
       </div>
-    </div>
+</div>
   <button @click="logout" class="logout_button">Log Out</button>
   </div>
 </div>
@@ -194,11 +194,8 @@ export default {
 
 
 
-<style>
-@import url('"https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet"');
-
+<style scoped>
 body {
-  font-family: 'Inter', sans-serif;
   margin: 0;
   padding: 0;
   height: 100vh;
@@ -223,6 +220,7 @@ th {
   color: rgb(105, 255, 71);
   height: 50px;
 }
+
 .orders_container{
   display: flex;
   height: 100vh; 
@@ -235,7 +233,7 @@ th {
 .orders_account {
   flex: 1;
   padding: 20px;
-  background-color: #fdf7ff;
+  background-color: #f9f9f9;
   display: flex;
   flex-direction: column; /* Arrange items vertically */
   justify-content: space-between; /* Space between content and logout button */
@@ -259,6 +257,7 @@ select {
 select:hover {
   cursor: pointer;
 }
+
 .status-pending {
   background-color: #ded2ff;
 }
