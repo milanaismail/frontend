@@ -1,10 +1,9 @@
 <template>
   <div class="body_template">
-  <button class="back_button" @click="goBack">Back to Orders</button>
+  <button class="back_button" @click="goBack">← Orders</button>
   <div class="order_info_status">
         <h2>Order ID: {{ order._id }} </h2> 
-        <p> {{ order.status }}</p>
-      </div>
+        <p :class="`status-${order.status.toLowerCase()}`"> {{ order.status }}</p>      </div>
   <div class="order_details_container" v-if="order">
     <div class="order_details_subcontainer">
       <!-- Product Details -->
@@ -58,47 +57,51 @@
     <!-- shipping details-->
     <div class="order_info_shipping">
       <h2>Shipping Details</h2>
-      <p><strong>Shipping Method:</strong> {{ order.shippingMethod || "N/A" }}</p>
-      <p><strong>Shipping Price:</strong> {{ order.shippingPrice  || "N/A"  }}</p>
+      <div class="order_info_shipping_subcontainer">
+        <p><strong>Shipping Method:</strong> {{ order.shippingMethod || "N/A" }}</p>
+        <p>{{ order.shippingPrice  || "N/A"  }}</p>
+      </div>
     </div>
 
     <!-- payment details-->
     <div class="order_info_payment">
       <h2>Payment Details</h2>
-      <!--subtotal-->
-      <p><strong>Subtotal:</strong> {{ formatPrice(calculateTotalPrice()) }}</p>
-      <!--shipping cost-->
-      <p><strong>Shipping:</strong> {{ order.shippingPrice || "N/A" }}</p>
-      <!--total price-->
-      <p><strong>Total:</strong> {{ formatPrice(calculateTotalPrice() + order.shippingPrice) }}</p>
+      <div class="order_info_payment_subcontainer">
+        <p><strong>Subtotal:</strong> {{ formatPrice(calculateTotalPrice()) }}</p>
+        <!--shipping cost-->
+        <p><strong>Shipping:</strong> {{ order.shippingPrice || "N/A" }}</p>
+        <!--total price-->
+        <p><strong>Total:</strong> {{ formatPrice(calculateTotalPrice() + order.shippingPrice) }}</p>
+      </div>
     </div>
   </div>
     <!-- Customer Details -->
     <div class="order_info">
       <div class="order_info_contact">
         <h2>Customer </h2> 
-        <p>Contact info</p>
+        <p><strong>Contact info:</strong></p>
         <p>{{ order.customer?.fullName || "N/A" }}</p>
         <p>{{ order.customer?.email || "N/A" }}</p>
         <p>{{ order.customer?.phone || "N/A" }}</p>
       </div>
       <div class="order_info_billing_adress">
-        <p>bill to</p>
+        <p><strong>Bill to:</strong></p>
         <p> {{ order.customer?.fullName || "N/A" }}</p>
         <p>{{ order.customer?.billingAddress || "N/A" }}</p>
       </div>
       <div class="order_info_shipping_adress">
-        <p>ship to</p>
+        <p><strong>Ship to:</strong></p>
         <p> {{ order.customer?.fullName || "N/A" }}</p>
         <p>{{ order.customer?.shippingAddress || "N/A" }}</p>
-      <p><strong>Created:</strong> {{ formatDate(order.createdAt) }}</p>
+      <p><strong>Created:</strong></p>
+        <p> {{ formatDate(order.createdAt) }}</p>
       </div>
       <div class="order_info_date">
-        <p>order date</p>
+        <p><strong>Order date:</strong></p>
       <p>{{ formatDate(order.createdAt) }}</p>
       </div>
       <div class="order_info_total">
-        <p>total price</p>
+        <p><strong>Total price:</strong></p>
         <p>{{ formatPrice(calculateTotalPrice()) }}</p>
       </div>
     </div>
@@ -152,10 +155,9 @@ export default {
 <style scoped>
 .body_template {
   background-color: #f9f9f9;
-  height: 100vh;
+  padding: 50px;
 }
 .order_details_container {
-  margin: 50px 50px;
   display: flex;
   flex-direction: row; /* Stack items vertically */
   gap: 20px; /* Space between blocks */
@@ -198,6 +200,8 @@ th, td {
   border: 1px solid #ddd;
   padding: 8px;
   text-align: left;
+  border-left: none;
+  border-right: none;
 }
 
 th {
@@ -205,23 +209,73 @@ th {
   font-weight: bold;
 }
 
+td{
+  vertical-align: top; /* Add this line to align content to the top */
+
+}
+
 .back_button {
   display: inline-block;
   padding: 10px 20px;
-  background-color: #007bff;
-  color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   font-size: 14px;
+  text-decoration: underline; /* Add this line to underline the text */
+
 }
 
-.back_button:hover {
-  background-color: #0056b3;
+.back_button:hover{
+  opacity: 0.8;
 }
+
+
 .sub-title {
   font-weight: bold;
   text-transform: uppercase;
 }
+.order_info_shipping_subcontainer{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.order_info_payment_subcontainer p{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.order_info_status{
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.status-pending {
+  background-color: #ded2ff;
+  padding: 10px 10px;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.status-delivered {
+  background-color: #9cff9a;
+  padding: 10px 10px;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.status-cancelled {
+  background-color: #ff9a9c;
+  padding: 10px 10px;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
 
 </style>
