@@ -41,7 +41,7 @@
   };
   </script>
   
-  <style>
+  <style scoped>
   form {
     display: flex;
     flex-direction: column;
