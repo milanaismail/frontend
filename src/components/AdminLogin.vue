@@ -9,8 +9,9 @@
         <button type="submit">Login</button>
       </form>
     </div>
-      <p v-if="error" style="color: red;">{{ error }}</p>
-    </div>
+  </div>
+      <p class="error" v-if="error" style="color: red;">{{ error }}</p>
+    
   </template>
   
   <script>
@@ -84,6 +85,13 @@
     flex-direction: column;
     align-items: center;
     margin-top: 150px;
+  }
+
+  .error {
+    margin-top: 10px;
+    text-align: center;
+    font-size: 16px;
+    color: red;
   }
   </style>
   
