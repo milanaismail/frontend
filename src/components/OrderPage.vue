@@ -63,89 +63,74 @@
   </template>
   
   <script>
-  export default {
-    data() {
-      return {
-        shoeConfig: {
-          productId: "abc123",
-          colors: {
-            "laces": "blue",
-            "sole-top": "red",
-            "sole-bottom": "yellow",
-            "front-part": "blue",
-            "upper-part": "green",
-            "body": "gray",
-            "lining": "red",
+ export default {
+  data() {
+    return {
+      shoeConfig: JSON.parse(localStorage.getItem("shoeConfig")) || {
+        colors: {},
+        fabrics: {},
+        size: null,
+        initials: "",
+        price: 0,
+        quantity: 1,
+      },
+      client: {
+        firstName: "",
+        lastName: "",
+        email: "",
+        phone: "",
+        address: "",
+        postalCode: "",
+        city: "",
+      },
+    };
+  },
+  methods: {
+    formatPartName(part) {
+      return part.replace(/-/g, " ").replace(/\b\w/g, (char) => char.toUpperCase());
+    },
+    formatPrice(price) {
+      return `$${price.toFixed(2)}`;
+    },
+    async submitOrder() {
+      const orderData = {
+        customer: { ...this.client },
+        products: [
+          {
+            productId: "abc123",
+            colors: this.shoeConfig.colors,
+            fabrics: this.shoeConfig.fabrics,
+            size: this.shoeConfig.size,
+            initials: this.shoeConfig.initials,
+            price: this.shoeConfig.price,
+            quantity: this.shoeConfig.quantity,
           },
-          fabrics: {
-            "laces": "cotton",
-            "sole-top": "rubber",
-            "sole-bottom": "rubber",
-            "front-part": "rubber",
-            "upper-part": "polyester",
-            "body": "leather",
-            "lining": "leather",
-          },
-          size: 42,
-          price: 230,
-          quantity: 1,
-        },
-        client: {
-          firstName: "",
-          lastName: "",
-          email: "",
-          phone: "",
-          address: "",
-          postalCode: "",
-          city: "",
-        },
+        ],
+        totalPrice: this.shoeConfig.price * this.shoeConfig.quantity,
+        status: "Pending",
       };
-    },
-    methods: {
-      formatPartName(part) {
-        return part.replace(/-/g, " ").replace(/\b\w/g, (char) => char.toUpperCase());
-      },
-      formatPrice(price) {
-        return `$${price.toFixed(2)}`;
-      },
-      async submitOrder() {
-        const orderData = {
-          customer: { ...this.client },
-          products: [
-            {
-              productId: this.shoeConfig.productId,
-              colors: this.shoeConfig.colors,
-              fabrics: this.shoeConfig.fabrics,
-              size: this.shoeConfig.size,
-              price: this.shoeConfig.price,
-              quantity: this.shoeConfig.quantity,
-            },
-          ],
-          totalPrice: this.shoeConfig.price * this.shoeConfig.quantity,
-          status: "Pending",
-        };
-  
-        try {
-          const response = await fetch("https://sneaker-config.onrender.com/api/v1/orders", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(orderData),
-          });
-  
-          if (!response.ok) {
-            throw new Error("Failed to place the order");
-          }
-  
-          alert("Order placed successfully!");
-          this.$router.push("/thank-you"); // Redirect to a thank-you page
-        } catch (error) {
-          alert("An error occurred while placing the order: " + error.message);
+
+      try {
+        const response = await fetch("https://sneaker-config.onrender.com/api/v1/orders", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(orderData),
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to place the order");
         }
-      },
+
+        alert("Order placed successfully!");
+        this.$router.push("/thank-you");
+      } catch (error) {
+        alert("An error occurred while placing the order: " + error.message);
+      }
     },
-  };
+  },
+};
   </script>
   
   <style scoped>
