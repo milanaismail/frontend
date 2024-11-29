@@ -45,15 +45,19 @@
       </div>
             <!-- Shoe Configuration Summary -->
             <div class="shoe-summary">
-        <h2>Product details</h2>
-        <img src="https://via.placeholder.com/150" alt="Placeholder Image">  
-        <div v-for="(value, part) in shoeConfig.colors" :key="part" class="shoe-part">
-          <strong>{{ formatPartName(part) }}:</strong> {{ value }} ({{ shoeConfig.fabrics[part] || "N/A" }})
-        </div>
-        <p><strong>Size:</strong> {{ shoeConfig.size }}</p>
-        <p><strong>Quantity:</strong> {{ shoeConfig.quantity }}</p>
-        <p><strong>Total Price:</strong> {{ formatPrice(shoeConfig.price * shoeConfig.quantity) }}</p>
+  <h2>Product details</h2>
+  <div class="image-and-colors">
+    <img src="https://via.placeholder.com/150" alt="Placeholder Image">
+    <div class="color-details">
+      <div v-for="(value, part) in shoeConfig.colors" :key="part" class="shoe-part">
+        <strong>{{ formatPartName(part) }}:</strong> {{ value }} ({{ shoeConfig.fabrics[part] || "N/A" }})
       </div>
+    </div>
+  </div>
+  <p><strong>Size:</strong> {{ shoeConfig.size }}</p>
+  <p><strong>Quantity:</strong> {{ shoeConfig.quantity }}</p>
+  <p class="price"><strong>Total Price:</strong> {{ formatPrice(shoeConfig.price * shoeConfig.quantity) }}</p>
+</div>
     </div>
 </div>
   </template>
@@ -232,6 +236,30 @@
     align-items: center;
     margin-bottom: 20px;
 }
+
+.shoe-summary {
+  display: flex;
+  flex-direction: column;
+}
+
+.image-and-colors {
+  display: flex;
+  align-items: flex-start;
+}
+
+.image-and-colors img {
+  margin-right: 20px; /* Ruimte tussen de afbeelding en de kleurdetails */
+}
+
+.shoe-part {
+  margin-bottom: 10px; /* Ruimte tussen de verschillende onderdelen */
+}
+
+.price{
+  display: flex;
+  justify-content:space-between;
+}
+
 
   </style>
   
