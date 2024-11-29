@@ -108,16 +108,42 @@ export default {
     },
   },
   async created() {
-    try {
-      const response = await fetch("https://sneaker-config.onrender.com/api/v1/orders", {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      });
-      if (!response.ok) throw new Error("Failed to fetch orders");
-      this.orders = await response.json();
-    } catch (err) {
-      this.error = err.message;
-    }
-  },
+  try {
+    const response = await fetch("https://sneaker-config.onrender.com/api/v1/orders", {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    });
+
+    if (!response.ok) throw new Error("Failed to fetch orders");
+
+    // Fetch and log raw data
+    const ordersData = await response.json();
+    console.log("Fetched Orders Data:", ordersData);
+
+    this.orders = ordersData.map((order) => {
+      if (order.customer) {
+        // Ensure firstName and lastName exist, or fallback to placeholders
+        const firstName = order.customer.firstName || "Unknown";
+        const lastName = order.customer.lastName || "Customer";
+
+        // Add fullName dynamically
+        order.customer.fullName = `${firstName} ${lastName}`;
+      } else {
+        console.warn(`Order missing customer details - ID: ${order._id}`);
+        // Add a placeholder for missing customer details
+        order.customer = { fullName: "Unknown Customer" };
+      }
+
+      return order;
+    });
+
+    // Log processed orders to verify transformation
+    console.log("Processed Orders with fullName and Product IDs:", this.orders);
+  } catch (err) {
+    console.error("Error Fetching or Processing Orders:", err.message);
+    this.error = err.message;
+  }
+},
+
   methods: {
     formatDate(dateString) {
       const options = { year: "numeric", month: "short", day: "numeric" };

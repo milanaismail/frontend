@@ -4,7 +4,7 @@ import OrderDetails from "../components/OrdersDetails.vue";
 import AdminLogin from "../components/AdminLogin.vue";
 
 const routes = [
-{ path: "/login", component: AdminLogin }, // Admin Login Page
+{ path: "/", component: AdminLogin }, // Admin Login Page
   { path: "/orders", component: OrdersOverview },
   { path: "/orders/:id", component: OrderDetails },
 ];

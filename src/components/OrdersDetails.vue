@@ -87,7 +87,8 @@
       <div class="order_info_shipping_adress">
         <p><strong>Ship to:</strong></p>
         <p> {{ order.customer?.fullName || "N/A" }}</p>
-        <p>{{ order.customer?.shippingAddress || "N/A" }}</p>
+        <p>{{ order.customer?.address || "N/A" }}</p>
+        <p>{{ order.customer?.cityCode || "N/A" }}</p>
       <p><strong>Created:</strong></p>
         <p> {{ formatDate(order.createdAt) }}</p>
       </div>
@@ -121,11 +122,20 @@ export default {
         }
       );
       if (!response.ok) throw new Error("Failed to fetch order details");
-      this.order = await response.json();
-    } catch (err) {
-      this.error = err.message;
+    const orderData = await response.json();
+
+    // Combine firstName and lastName into fullName dynamically
+    if (orderData.customer) {
+      orderData.customer.fullName = `${orderData.customer.firstName} ${orderData.customer.lastName}`;
+      orderData.customer.cityCode = `${orderData.customer.postalCode} ${orderData.customer.city}`;
+
     }
-  },
+
+    this.order = orderData;
+  } catch (err) {
+    this.error = err.message;
+  }
+},
   methods: {
     formatDate(dateString) {
       const options = { year: "numeric", month: "long", day: "numeric" };
