@@ -28,22 +28,22 @@
             </td>
             <td>{{ product.productId }}</td>
             <td>
+              <strong>Outside Left:</strong> {{ product.colors["outside_1"] || "N/A" }}<br />
+              <strong>Outside Right:</strong> {{ product.colors["outside_2"] || "N/A" }}<br />
+              <strong>Outside Front:</strong> {{ product.colors["outside_3"] || "N/A" }}<br />
+              <strong>Inside:</strong> {{ product.colors["inside"] || "N/A" }}<br />
               <strong>Laces:</strong> {{ product.colors["laces"] || "N/A" }}<br />
-              <strong>Sole Top:</strong> {{ product.colors["sole-top"] || "N/A" }}<br />
-              <strong>Sole Bottom:</strong> {{ product.colors["sole-bottom"] || "N/A" }}<br />
-              <strong>Front Part:</strong> {{ product.colors["front-part"] || "N/A" }}<br />
-              <strong>Upper Part:</strong> {{ product.colors["upper-part"] || "N/A" }}<br />
-              <strong>Body:</strong> {{ product.colors["body"] || "N/A" }}<br />
-              <strong>Lining:</strong> {{ product.colors["lining"] || "N/A" }}
+              <strong>Sole Bottom:</strong> {{ product.colors["sole_bottom"] || "N/A" }}<br />
+              <strong>Sole Top:</strong> {{ product.colors["sole_top"] || "N/A" }}
             </td>
             <td>
+              <strong>Outside Left:</strong> {{ product.fabrics["outside_1"] || "N/A" }}<br />
+              <strong>Outside Right:</strong> {{ product.fabrics["outside_2"] || "N/A" }}<br />
+              <strong>Outside Front:</strong> {{ product.fabrics["outside_3"] || "N/A" }}<br />
+              <strong>Inside:</strong> {{ product.fabrics["inside"] || "N/A" }}<br />
               <strong>Laces:</strong> {{ product.fabrics["laces"] || "N/A" }}<br />
-              <strong>Sole Top:</strong> {{ product.fabrics["sole-top"] || "N/A" }}<br />
-              <strong>Sole Bottom:</strong> {{ product.fabrics["sole-bottom"] || "N/A" }}<br />
-              <strong>Front Part:</strong> {{ product.fabrics["front-part"] || "N/A" }}<br />
-              <strong>Upper Part:</strong> {{ product.fabrics["upper-part"] || "N/A" }}<br />
-              <strong>Body:</strong> {{ product.fabrics["body"] || "N/A" }}<br />
-              <strong>Lining:</strong> {{ product.fabrics["lining"] || "N/A" }}
+              <strong>Sole Bottom:</strong> {{ product.fabrics["sole_bottom"] || "N/A" }}<br />
+              <strong>Sole Top:</strong> {{ product.fabrics["sole_top"] || "N/A" }}
             </td>
             <td>{{ product.size }}</td>
             <td>{{ formatPrice(product.price) }}</td>
