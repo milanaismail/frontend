@@ -32,7 +32,7 @@
               </select>
           </td>
           <td>
-            <button class="view" @click="viewOrder(order._id)">view</button>
+            <button class="view" @click="viewOrder(order._id)">View</button>
           </td>
         </tr>
       </tbody>
