@@ -1,11 +1,14 @@
 <template>
-    <div>
+    <div class="login">
+      <img class="logo" src="/swear_logo.png" alt="">
+      <div class="input">
       <h1>Admin Login</h1>
       <form @submit.prevent="login">
         <input v-model="email" type="email" placeholder="Email" required />
         <input v-model="password" type="password" placeholder="Password" required />
         <button type="submit">Login</button>
       </form>
+    </div>
       <p v-if="error" style="color: red;">{{ error }}</p>
     </div>
   </template>
@@ -45,12 +48,42 @@
   form {
     display: flex;
     flex-direction: column;
-    max-width: 300px;
+    max-width: 500px;
     margin: 0 auto;
   }
-  input, button {
+  input {
     margin: 10px 0;
     padding: 10px;
+    width: 430px;
+    border-radius: 12px;
+    border-color: darkgray;
+  }
+
+  button {
+    margin: 10px 0;
+    padding: 10px;
+    width: 450px;
+    background-color: #65F845;
+    border: none;
+    border-radius: 12px;
+  }
+
+  .logo{
+    width: 40%;
+  }
+
+  .login{
+    display: flex;
+    flex-direction: row;
+    gap: 200px;
+    margin-left: 100px;
+  }
+
+  .input{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 150px;
   }
   </style>
   
