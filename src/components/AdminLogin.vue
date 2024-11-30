@@ -1,8 +1,10 @@
 <template>
     <div class="login">
-      <img class="logo" src="/swear_logo.png" alt="">
+      <div class="login-left">
+        <img class="logo" src="/swear_logo.png" alt="">
+      </div>
       <div class="input">
-      <h1>Admin Login</h1>
+      <h1>Admin login</h1>
       <form @submit.prevent="login">
         <input v-model="email" type="email" placeholder="Email" required />
         <input v-model="password" type="password" placeholder="Password" required />
@@ -57,21 +59,31 @@
     max-width: 500px;
     margin: 0 auto;
   }
-  input {
-    margin: 10px 0;
-    padding: 10px;
-    width: 430px;
-    border-radius: 12px;
-    border-color: darkgray;
+  input , textarea{
+    width: -webkit-fill-available;
+    padding: 15px;
+    margin: 5px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #f9f9f9;
   }
 
   button {
-    margin: 10px 0;
-    padding: 10px;
+    padding: 15px;
+    margin: 5px 0;
     width: 450px;
     background-color: #65F845;
     border: none;
-    border-radius: 12px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  button:hover {
+    opacity: 0.9;
+  }
+
+  button:active {
+    opacity: 0.8;
   }
 
   .logo{
@@ -80,16 +92,16 @@
 
   .login{
     display: flex;
-    flex-direction: row;
-    gap: 200px;
-    margin-left: 100px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
   }
 
   .input{
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 150px;
   }
 
   .error {
@@ -98,5 +110,12 @@
     font-size: 16px;
     color: red;
   }
+
+  .login-left{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
   </style>
   

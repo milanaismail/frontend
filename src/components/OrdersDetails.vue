@@ -100,6 +100,8 @@
         <p><strong>Total price:</strong></p>
         <p>{{ formatPrice(calculateTotalPrice()) }}</p>
       </div>
+      <button class="delete_button" @click="deleteOrder">Delete Order</button>
+
     </div>
   </div>
 </div>
@@ -152,6 +154,27 @@ export default {
       return this.order.products.reduce((total, product) => {
         return total + product.price * product.quantity;
       }, 0);
+    },
+    async deleteOrder() {
+      if (confirm("Are you sure you want to delete this order?")) {
+        try {
+          const response = await fetch(
+            `https://sneaker-config.onrender.com/api/v1/orders/${this.$route.params.id}`,
+            {
+              method: "DELETE",
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+              },
+            }
+          );
+          if (!response.ok) throw new Error("Failed to delete order");
+          alert("Order deleted successfully!");
+          this.$router.push("/orders");
+        } catch (err) {
+          console.error("Error deleting order:", err);
+          alert("Failed to delete the order. Please try again.");
+        }
+      }
     },
   },
 };
