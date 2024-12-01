@@ -212,7 +212,7 @@ export default {
     },
     logout() {
       localStorage.removeItem("token"); // Remove token from local storage
-      this.$router.push("/login"); // Redirect to login page
+      this.$router.push("/"); // Redirect to login page
     },
   },
 };
