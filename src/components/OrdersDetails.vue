@@ -105,6 +105,7 @@
     <div v-if="confirmationVisible" class="confirmation-modal">
   <div class="modal-content">
     <p>Are you sure you want to delete this order?</p>
+    <p>This action cannot be reversed.</p>
     <div class="modal-actions">
       <button @click="confirmDeleteOrder" class="confirm-button">Yes</button>
       <button @click="hideDeleteConfirmation" class="cancel-button">No</button>
@@ -114,7 +115,7 @@
 
 <!-- Success Modal -->
 <div v-if="successModalVisible" class="success-modal">
-      <p>Status updated successfully!</p>
+      <p>Order deleted successfully!</p>
       <button @click="closeSuccessModal">OK</button>
     </div>
   
