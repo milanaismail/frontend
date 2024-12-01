@@ -25,22 +25,27 @@
     },
     methods: {
       async login() {
-        try {
-          const response = await fetch("https://sneaker-config.onrender.com/api/v1/admin/login", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email: this.email, password: this.password }),
-          });
-          if (!response.ok) {
-            throw new Error("Invalid login credentials");
-          }
-          const data = await response.json();
-          localStorage.setItem("token", data.token); // Store token
-          this.$router.push("/orders"); // Redirect to orders overview
-        } catch (err) {
-          this.error = err.message;
-        }
-      },
+  try {
+    const response = await fetch("https://sneaker-config.onrender.com/api/v1/admin/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: this.email, password: this.password }),
+    });
+
+    // Controleer of de response een fout bevat
+    if (!response.ok) {
+      const errorData = await response.json(); // Backend error ophalen
+      throw new Error(errorData.message || "Invalid login credentials");
+    }
+
+    const data = await response.json();
+    localStorage.setItem("token", data.token); // JWT-token opslaan
+    this.$router.push("/orders"); // Doorverwijzen naar orderspagina
+  } catch (err) {
+    this.error = err.message; // Toon foutbericht in de UI
+  }
+}
+
     },
   };
   </script>
