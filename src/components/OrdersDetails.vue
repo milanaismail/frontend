@@ -77,6 +77,7 @@
   </div>
     <!-- Customer Details -->
     <div class="order_info">
+    <div class="order_info_container">
       <div class="order_info_contact">
         <h2>Customer </h2> 
         <p><strong>Contact info:</strong></p>
@@ -100,7 +101,25 @@
         <p><strong>Total price:</strong></p>
         <p>{{ formatPrice(calculateTotalPrice()) }}</p>
       </div>
-      <button class="delete_button" @click="deleteOrder">Delete Order</button>
+    </div>
+    <div v-if="confirmationVisible" class="confirmation-modal">
+  <div class="modal-content">
+    <p>Are you sure you want to delete this order?</p>
+    <div class="modal-actions">
+      <button @click="confirmDeleteOrder" class="confirm-button">Yes</button>
+      <button @click="hideDeleteConfirmation" class="cancel-button">No</button>
+    </div>
+  </div>
+</div>
+
+<!-- Success Modal -->
+<div v-if="successModalVisible" class="success-modal">
+      <p>Status updated successfully!</p>
+      <button @click="closeSuccessModal">OK</button>
+    </div>
+  
+
+    <button class="delete_button" @click="showDeleteConfirmation">Delete Order</button>
 
     </div>
   </div>
@@ -113,6 +132,8 @@ export default {
     return {
       order: null,
       error: null,
+      confirmationVisible: false,
+      successModalVisible: false, // Add this to control the success modal visibility
     };
   },
   async created() {
@@ -155,28 +176,45 @@ export default {
         return total + product.price * product.quantity;
       }, 0);
     },
-    async deleteOrder() {
-      if (confirm("Are you sure you want to delete this order?")) {
-        try {
-          const response = await fetch(
-            `https://sneaker-config.onrender.com/api/v1/orders/${this.$route.params.id}`,
-            {
-              method: "DELETE",
-              headers: {
-                Authorization: `Bearer ${localStorage.getItem("token")}`,
-              },
-            }
-          );
-          if (!response.ok) throw new Error("Failed to delete order");
-          alert("Order deleted successfully!");
-          this.$router.push("/orders");
-        } catch (err) {
-          console.error("Error deleting order:", err);
-          alert("Failed to delete the order. Please try again.");
-        }
-      }
-    },
+    showDeleteConfirmation() {
+    this.confirmationVisible = true;
   },
+  hideDeleteConfirmation() {
+    this.confirmationVisible = false;
+  },
+  async confirmDeleteOrder() {
+    try {
+      const response = await fetch(
+        `https://sneaker-config.onrender.com/api/v1/orders/${this.$route.params.id}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      if (!response.ok) throw new Error("Failed to delete order");
+      
+      // Instead of alert, set successModalVisible to true to show the success modal
+      this.successModalVisible = true;
+
+      // Optionally, navigate to the orders page after a short delay to allow the user to see the success modal
+      setTimeout(() => {
+        this.$router.push("/orders");
+      }, 2000); // Delay for 2 seconds before redirecting
+    } catch (err) {
+      console.error("Error deleting order:", err);
+      alert("Failed to delete the order. Please try again.");
+    } finally {
+      this.confirmationVisible = false;
+    }
+  },
+
+  // Method to close the success modal
+  closeSuccessModal() {
+    this.successModalVisible = false;
+  },
+},
 };
 </script>
 
@@ -303,6 +341,129 @@ td{
   border: none;
   border-radius: 4px;
   font-size: 14px;
+}
+.delete_button{
+  padding: 10px 20px;
+  background-color: #fc5f61;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  align-self: center; 
+}
+
+.delete_button:hover {
+  opacity: 0.9;
+}
+
+
+.order_info{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.confirmation-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #ffffff; /* Pure white background */
+  padding: 30px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  width: 400px;
+  text-align: center;
+}
+
+.confirmation-modal p {
+  font-size: 16px;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.confirmation-modal button {
+  margin: 10px 5px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  background-color: #28a745;
+  color: white
+}
+
+.confirmation-modal button:hover {
+  opacity: 0.9;
+}
+.confirmation-modal button:last-child {
+  background-color: #dc3545; 
+}
+
+.confirmation-modal button:last-child:hover {
+  opacity: 0.9;
+}
+.confirm-button {
+  background-color: #fc5f61;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.cancel-button {
+  background-color: #f4f4f4;
+  padding: 10px 20px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.confirm-button:hover,
+.cancel-button:hover {
+  opacity: 0.8;
+}
+
+.success-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #f0fff4; /* Light green background for success */
+  padding: 30px;
+  border: 1px solid #c3e6cb;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  width: 400px;
+  text-align: center;
+}
+
+.success-modal p {
+  font-size: 16px;
+  color: #155724; /* Dark green for text */
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+
+.success-modal button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  background-color: #28a745; /* Green button */
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.success-modal button:hover {
+  background-color: #218838; /* Darker green on hover */
 }
 
 

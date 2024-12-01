@@ -15,8 +15,7 @@
       </thead>
       <tbody>
         <tr v-for="order in orders" :key="order._id">
-          <td>{{ order._id }}</td>
-          <td>{{ formatDate(order.createdAt) }}</td>
+          <td>{{ order._id.slice(0, 8) }}</td>          <td>{{ formatDate(order.createdAt) }}</td>
           <td>{{ order.customer?.fullName || "N/A" }}</td>
           <td>{{ order.totalPrice || "N/A" }}</td>
           <td>
@@ -36,6 +35,7 @@
           </td>
         </tr>
       </tbody>
+
     </table>
     <p v-if="error" style="color: red;">{{ error }}</p>
   </div>
@@ -254,8 +254,42 @@ th {
 }
 .orders_sub_container{
   flex: 5;
-  padding: 20px;
+  padding: 20px 40px;
 }
+
+.orders_sub_container table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.orders_sub_container thead {
+  position: sticky;
+  top: 0;
+  z-index: 1; /* Zorg ervoor dat de header boven de tbody blijft */
+  background-color: #000; /* Header-achtergrond */
+  color: rgb(105, 255, 71);
+}
+
+.orders_sub_container tbody {
+  display: block; /* Maakt de tbody scrollbaar */
+  max-height: 450px; /* Pas de hoogte aan naar wens */
+  overflow-y: auto; /* Scroll alleen verticaal */
+}
+
+.orders_sub_container tr {
+  display: table;
+  table-layout: fixed;
+  width: 100%; /* Zorg dat rijen uitgelijnd blijven */
+}
+
+.orders_sub_container th, 
+.orders_sub_container td {
+  padding: 8px;
+  text-align: left;
+  border-left: none;
+  border-right: none;
+}
+
 .orders_account {
   flex: 1;
   padding: 20px;
@@ -422,5 +456,7 @@ select:hover {
   background-color: #676767;
   color: white;
 }
+
+
 
 </style>

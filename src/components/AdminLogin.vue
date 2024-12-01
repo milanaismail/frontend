@@ -1,7 +1,7 @@
 <template>
     <div class="login">
       <div class="login-left">
-        <img class="logo" src="/swear_logo.png" alt="">
+        <img class="logo" src="/SWEAR_Logo_white.png" alt="">
       </div>
       <div class="input">
       <h1>Admin login</h1>
@@ -96,6 +96,7 @@
     justify-content: center;
     align-items: center;
     height: 100vh;
+    background-color: black;
   }
 
   .input{
@@ -111,10 +112,18 @@
     color: red;
   }
 
-  .login-left{
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  .login-left {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+  h1{
+    color: white;
   }
 
   </style>
