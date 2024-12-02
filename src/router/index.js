@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import OrdersOverview from "../components/OrdersOverview.vue";
 import OrderDetails from "../components/OrdersDetails.vue";
 import AdminLogin from "../components/AdminLogin.vue";
+import UserDetails from "../components/UserDetails.vue";
 
 const routes = [
 { path: "/", component: AdminLogin }, // Admin Login Page
