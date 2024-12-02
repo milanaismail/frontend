@@ -1,9 +1,10 @@
 <template>
   <div class="body_template">
   <button class="back_button" @click="goBack">← Orders</button>
-  <div class="order_info_status">
-        <h2>Order ID: {{ order._id }} </h2> 
-        <p :class="`status-${order.status.toLowerCase()}`"> {{ order.status }}</p>      </div>
+  <div class="order_info_status" v-if="order">
+  <h2>Order ID: {{ order._id ? order._id.slice(0, 8) : 'N/A' }}</h2>
+  <p :class="order.status ? `status-${order.status.toLowerCase()}` : ''">{{ order.status || 'Unknown' }}</p>
+</div>
   <div class="order_details_container" v-if="order">
     <div class="order_details_subcontainer">
       <!-- Product Details -->
@@ -26,25 +27,54 @@
           <tr v-for="product in order.products" :key="product.productId">
             <td>        <img src="https://via.placeholder.com/150" alt="Placeholder Image">     
             </td>
-            <td>{{ product.productId }}</td>
+            <td>{{ product.productId.slice(-8) }}</td>
             <td>
-              <strong>Outside Left:</strong> {{ product.colors["outside_1"] || "N/A" }}<br />
-              <strong>Outside Right:</strong> {{ product.colors["outside_2"] || "N/A" }}<br />
-              <strong>Outside Front:</strong> {{ product.colors["outside_3"] || "N/A" }}<br />
-              <strong>Inside:</strong> {{ product.colors["inside"] || "N/A" }}<br />
-              <strong>Laces:</strong> {{ product.colors["laces"] || "N/A" }}<br />
-              <strong>Sole Bottom:</strong> {{ product.colors["sole_bottom"] || "N/A" }}<br />
-              <strong>Sole Top:</strong> {{ product.colors["sole_top"] || "N/A" }}
-            </td>
-            <td>
-              <strong>Outside Left:</strong> {{ product.fabrics["outside_1"] || "N/A" }}<br />
-              <strong>Outside Right:</strong> {{ product.fabrics["outside_2"] || "N/A" }}<br />
-              <strong>Outside Front:</strong> {{ product.fabrics["outside_3"] || "N/A" }}<br />
-              <strong>Inside:</strong> {{ product.fabrics["inside"] || "N/A" }}<br />
-              <strong>Laces:</strong> {{ product.fabrics["laces"] || "N/A" }}<br />
-              <strong>Sole Bottom:</strong> {{ product.fabrics["sole_bottom"] || "N/A" }}<br />
-              <strong>Sole Top:</strong> {{ product.fabrics["sole_top"] || "N/A" }}
-            </td>
+            <div v-if="product.colors['outside_1'] && product.colors['outside_1'] !== 'N/A'">
+              <strong>Outside Left:</strong> {{ product.colors["outside_1"] }}
+            </div>
+            <div v-if="product.colors['outside_2'] && product.colors['outside_2'] !== 'N/A'">
+              <strong>Outside Right:</strong> {{ product.colors["outside_2"] }}
+            </div>
+            <div v-if="product.colors['outside_3'] && product.colors['outside_3'] !== 'N/A'">
+              <strong>Outside Front:</strong> {{ product.colors["outside_3"] }}
+            </div>
+            <div v-if="product.colors['inside'] && product.colors['inside'] !== 'N/A'">
+              <strong>Inside:</strong> {{ product.colors["inside"] }}
+            </div>
+            <div v-if="product.colors['laces'] && product.colors['laces'] !== 'N/A'">
+              <strong>Laces:</strong> {{ product.colors["laces"] }}
+            </div>
+            <div v-if="product.colors['sole_bottom'] && product.colors['sole_bottom'] !== 'N/A'">
+              <strong>Sole Bottom:</strong> {{ product.colors["sole_bottom"] }}
+            </div>
+            <div v-if="product.colors['sole_top'] && product.colors['sole_top'] !== 'N/A'">
+              <strong>Sole Top:</strong> {{ product.colors["sole_top"] }}
+            </div>
+          </td>
+          <td>
+            <div v-if="product.fabrics['outside_1'] && product.fabrics['outside_1'] !== 'N/A'">
+              <strong>Outside Left:</strong> {{ product.fabrics["outside_1"] }}
+            </div>
+            <div v-if="product.fabrics['outside_2'] && product.fabrics['outside_2'] !== 'N/A'">
+              <strong>Outside Right:</strong> {{ product.fabrics["outside_2"] }}
+            </div>
+            <div v-if="product.fabrics['outside_3'] && product.fabrics['outside_3'] !== 'N/A'">
+              <strong>Outside Front:</strong> {{ product.fabrics["outside_3"] }}
+            </div>
+            <div v-if="product.fabrics['inside'] && product.fabrics['inside'] !== 'N/A'">
+              <strong>Inside:</strong> {{ product.fabrics["inside"] }}
+            </div>
+            <div v-if="product.fabrics['laces'] && product.fabrics['laces'] !== 'N/A'">
+              <strong>Laces:</strong> {{ product.fabrics["laces"] }}
+            </div>
+            <div v-if="product.fabrics['sole_bottom'] && product.fabrics['sole_bottom'] !== 'N/A'">
+              <strong>Sole Bottom:</strong> {{ product.fabrics["sole_bottom"] }}
+            </div>
+            <div v-if="product.fabrics['sole_top'] && product.fabrics['sole_top'] !== 'N/A'">
+              <strong>Sole Top:</strong> {{ product.fabrics["sole_top"] }}
+            </div>
+          </td>
+
             <td>{{ product.size }}</td>
             <td>{{ formatPrice(product.price) }}</td>
             <td>{{ product.quantity }}</td>
@@ -58,8 +88,8 @@
     <div class="order_info_shipping">
       <h2>Shipping Details</h2>
       <div class="order_info_shipping_subcontainer">
-        <p><strong>Shipping Method:</strong> {{ order.shippingMethod || "N/A" }}</p>
-        <p>{{ order.shippingPrice  || "N/A"  }}</p>
+        <p><strong>Shipping Method:</strong> Bpost</p>
+        <p>{{ formatPrice(SHIPPING_COST) }}</p>
       </div>
     </div>
 
@@ -67,11 +97,11 @@
     <div class="order_info_payment">
       <h2>Payment Details</h2>
       <div class="order_info_payment_subcontainer">
-        <p><strong>Subtotal:</strong> {{ formatPrice(calculateTotalPrice()) }}</p>
+        <p><strong>Subtotal:</strong> {{ formatPrice(calculateSubtotal()) }}</p>
         <!--shipping cost-->
-        <p><strong>Shipping:</strong> {{ order.shippingPrice || "N/A" }}</p>
+        <p><strong>Shipping:</strong> {{ formatPrice(SHIPPING_COST) }}</p>
         <!--total price-->
-        <p><strong>Total:</strong> {{ formatPrice(calculateTotalPrice() + order.shippingPrice) }}</p>
+        <p><strong>Total:</strong> {{ formatPrice(calculateTotalPrice()) }}</p>
       </div>
     </div>
   </div>
@@ -128,6 +158,8 @@
 </template>
 
 <script>
+const SHIPPING_COST = 20;
+
 export default {
   data() {
     return {
@@ -135,6 +167,7 @@ export default {
       error: null,
       confirmationVisible: false,
       successModalVisible: false, // Add this to control the success modal visibility
+      SHIPPING_COST, 
     };
   },
   async created() {
@@ -154,6 +187,12 @@ export default {
       orderData.customer.cityCode = `${orderData.customer.postalCode} ${orderData.customer.city}`;
 
     }
+    if (orderData.products) {
+      orderData.products.forEach((product) => {
+        product.productId = product._id; // Ensure productId is derived from _id
+      });
+    }
+    orderData.shippingPrice = orderData.shippingPrice || 0;
 
     this.order = orderData;
   } catch (err) {
@@ -161,6 +200,12 @@ export default {
   }
 },
   methods: {
+    hasValidColors(colors) {
+      return Object.values(colors || {}).some((value) => value && value !== "N/A");
+    },
+    hasValidFabrics(fabrics) {
+      return Object.values(fabrics || {}).some((value) => value && value !== "N/A");
+    },
     formatDate(dateString) {
       const options = { year: "numeric", month: "long", day: "numeric" };
       return new Date(dateString).toLocaleDateString(undefined, options);
@@ -171,8 +216,19 @@ export default {
     goBack() {
       this.$router.push("/orders");
     },
-  calculateTotalPrice() {
+    
+    calculateTotalPrice() {
       if (!this.order || !this.order.products) return 0;
+
+      const productsTotal = this.order.products.reduce((total, product) => {
+        return total + product.price * product.quantity;
+      }, 0);
+
+      return productsTotal + SHIPPING_COST; // Always add the fixed shipping cost
+    },
+    calculateSubtotal() {
+      if (!this.order || !this.order.products) return 0;
+
       return this.order.products.reduce((total, product) => {
         return total + product.price * product.quantity;
       }, 0);
