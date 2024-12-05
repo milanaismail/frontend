@@ -110,11 +110,20 @@ export default {
   async created() {
   try {
     const response = await fetch("https://sneaker-config.onrender.com/api/v1/orders", {
-      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      headers: { 
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
     });
 
-    if (!response.ok) throw new Error("Failed to fetch orders");
-
+    if (!response.ok) {
+        const errorData = await response.json();
+        if (response.status === 403) {
+          // Redirect to Unauthorized page if access is forbidden
+          this.$router.push("/unauthorized");
+        } else {
+          throw new Error(errorData.message || "Failed to fetch orders");
+        }
+      }
     // Fetch and log raw data
     const ordersData = await response.json();
     console.log("Fetched Orders Data:", ordersData);
