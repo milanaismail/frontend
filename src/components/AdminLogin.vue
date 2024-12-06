@@ -8,18 +8,13 @@
       <form @submit.prevent="login">
         <input v-model="email" type="email" placeholder="Email" required />
         <input v-model="password" type="password" placeholder="Password" required />
-        <button type="submit" :disabled="loading">
-          <span v-if="!loading">Login</span>
-          <span v-else>Loading...</span>
-        </button>
+        <button type="submit">Login</button>
         <p class="error" v-if="error" style="color: red;">{{ error }}</p>
       </form>
     </div>
-    <div v-if="loading" class="loading-overlay">
-      <div class="spinner"></div>
-    </div>
   </div>
-</template>
+    
+  </template>
   
   <script>
   export default {
@@ -31,32 +26,30 @@
       };
     },
     methods: {
-    async login() {
-      this.loading = true; // Set loading to true when API call starts
-      this.error = null; // Reset error
-      try {
-        const response = await fetch("https://sneaker-config.onrender.com/api/v1/admin/login", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email: this.email, password: this.password }),
-        });
+      async login() {
+  try {
+    const response = await fetch("https://sneaker-config.onrender.com/api/v1/admin/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: this.email, password: this.password }),
+    });
 
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.message || "Invalid login credentials");
-        }
+    // Controleer of de response een fout bevat
+    if (!response.ok) {
+      const errorData = await response.json(); // Backend error ophalen
+      throw new Error(errorData.message || "Invalid login credentials");
+    }
 
-        const data = await response.json();
-        localStorage.setItem("token", data.token);
-        this.$router.push("/orders");
-      } catch (err) {
-        this.error = err.message;
-      } finally {
-        this.loading = false; // Set loading to false after API call completes
-      }
+    const data = await response.json();
+    localStorage.setItem("token", data.token); // JWT-token opslaan
+    this.$router.push("/orders"); // Doorverwijzen naar orderspagina
+  } catch (err) {
+    this.error = err.message; // Toon foutbericht in de UI
+  }
+}
+
     },
-  },
-};
+  };
   </script>
   
   <style scoped>
@@ -132,32 +125,6 @@
   h1{
     color: white;
   }
-  .loading-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 999;
-}
 
-.spinner {
-  width: 50px;
-  height: 50px;
-  border: 6px solid rgba(255, 255, 255, 0.3);
-  border-top-color: #fff;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
   </style>
   
