@@ -315,11 +315,11 @@ select {
   border-radius: 4px;
   font-size: 14px;
   background-color: transparent;
-  -webkit-appearance: menulist; /* Keeps the native dropdown arrow in Safari */
-  -moz-appearance: menulist;
   outline: none;  
-  appearance: menulist;
-  border-right: 10px solid transparent
+  border-right: 10px solid transparent;
+  -webkit-appearance: none; /* Remove default styling in WebKit browsers */
+  -moz-appearance: none;    /* Remove default styling in Firefox */
+  appearance: menulist;   
 
 }
 
