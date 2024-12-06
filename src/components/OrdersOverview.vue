@@ -310,7 +310,7 @@ th {
 }
 
 select {
-  padding: 10px 5px;
+  padding: 10px 15px 10px 5px;
   border: none;
   border-radius: 4px;
   font-size: 14px;
@@ -320,6 +320,10 @@ select {
   -webkit-appearance: none; /* Remove default styling in WebKit browsers */
   -moz-appearance: none;    /* Remove default styling in Firefox */
   appearance: none;   
+  background-image: url('data:image/svg+xml,%3Csvg xmlns%3D%22http%3A//www.w3.org/2000/svg%22 fill%3D%22none%22 viewBox%3D%220 0 24 24%22 stroke-width%3D%221.5%22 stroke%3D%22currentColor%22 class%3D%22size-6%22%3E%3Cpath stroke-linecap%3D%22round%22 stroke-linejoin%3D%22round%22 d%3D%22m19.5 8.25-7.5 7.5-7.5-7.5%22 /%3E%3C/svg%3E');
+  background-repeat: no-repeat;
+  background-position: right center; /* Position arrow to the right */
+  background-size: 20px; 
 
 }
 
