@@ -319,7 +319,7 @@ select {
   border-right: 10px solid transparent;
   -webkit-appearance: none; /* Remove default styling in WebKit browsers */
   -moz-appearance: none;    /* Remove default styling in Firefox */
-  appearance: menulist;   
+  appearance: none;   
 
 }
 
