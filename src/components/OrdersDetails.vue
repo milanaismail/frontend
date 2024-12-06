@@ -13,7 +13,6 @@
        <table>
         <thead>
           <tr>
-            <th>Image</th>
             <th>Product ID</th>
             <th>Colors</th>
             <th>Fabrics</th>
@@ -25,8 +24,6 @@
         </thead>
         <tbody>
           <tr v-for="product in order.products" :key="product.productId">
-            <td>        <img src="https://via.placeholder.com/150" alt="Placeholder Image">     
-            </td>
             <td>{{ product.productId.slice(-8) }}</td>
             <td>
             <div v-if="product.colors['outside_1'] && product.colors['outside_1'] !== 'N/A'">
