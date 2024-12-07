@@ -16,6 +16,7 @@
             <th>Product ID</th>
             <th>Colors</th>
             <th>Fabrics</th>
+            <th>Initials</th>
             <th>Size</th>
             <th>Price</th>
             <th>Quantity</th>
@@ -71,6 +72,7 @@
               <strong>Sole Top:</strong> {{ product.fabrics["sole_top"] }}
             </div>
           </td>
+          <td>{{ product.initials || "None" }}</td>
 
             <td>{{ product.size }}</td>
             <td>{{ formatPrice(product.price) }}</td>
